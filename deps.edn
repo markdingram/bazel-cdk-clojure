@@ -1,0 +1,9 @@
+; just a dummy file to allow cursive & intellij to run
+{:paths ["java" "javatests"]
+ :deps  {org.clojure/clojure {:mvn/version "1.10.1"}
+
+         uswitch/lambada     {:mvn/version "0.1.2"}}
+ :aliases
+ {:dev {:extra-paths ["dev"]
+        :extra-deps {spyscope                    {:mvn/version "0.1.6"}
+                     org.clojure/core.rrb-vector {:mvn/version "0.1.1"}}}}}

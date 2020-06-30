@@ -1,0 +1,7 @@
+{:documentation "<p>Returns a list of all buckets owned by the authenticated sender of the request.</p>",
+ :documentationUrl "http://docs.amazonwebservices.com/AmazonS3/latest/API/RESTServiceGET.html",
+ :name "ListBuckets",
+ :request nil,
+ :required nil,
+ :response {:Buckets [:seq-of {:CreationDate timestamp, :Name string}],
+            :Owner {:DisplayName string, :ID string}}}

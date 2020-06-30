@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "pretty": true,
+    "lib": ["es2020"],
+    "target": "es2019",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": ".",
+
+    "declaration": true,
+    "sourceMap": false,
+    "noEmitOnError": true,
+
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "tallington/*": ["*", "bazel-bin/*", "bazel-genfiles/*"]
+    }
+  },
+  "exclude": ["dist", "bazel-*", "node_modules"]
+}

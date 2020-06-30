@@ -1,0 +1,12 @@
+package(default_visibility = ["//visibility:public"])
+
+load("//rules/kaocha:rules.bzl", "kaocha")
+
+kaocha(
+    name = "lambda",
+    prefix = "javatests",
+    package = "lambda",
+    tests = glob(["*.clj"]),
+    testResources = glob(["*.edn"]),
+    deps = ["//java/lambda:clojure"]
+)

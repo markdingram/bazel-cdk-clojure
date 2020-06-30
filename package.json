@@ -1,0 +1,25 @@
+{
+    "private": true,
+    "scripts": {
+        "build": "bazel build //...",
+        "repl": "bazel run :repl",
+        "test": "bazel test //...",
+        "cdk:bootstrap": "bazel run cdk -- bootstrap",
+        "cdk:deploy": "bazel run cdk -- deploy HelloStack"
+    },
+    "devDependencies": {
+        "@aws-cdk/aws-apigatewayv2": "1.47.0",
+        "@aws-cdk/aws-lambda": "1.47.0",
+        "@aws-cdk/aws-lambda-event-sources": "1.47.0",
+        "@aws-cdk/aws-s3": "1.47.0",
+        "@aws-cdk/aws-s3-deployment": "1.47.0",
+        "@aws-cdk/core": "1.47.0",
+        "@bazel/bazelisk": "latest",
+        "@bazel/buildifier": "latest",
+        "@bazel/ibazel": "latest",
+        "@bazel/typescript": "^1.7.0",
+        "@types/aws-lambda": "^8.10.56",
+        "aws-cdk": "1.47.0",
+        "typescript": "^3.9.5"
+    }
+}
