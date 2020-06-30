@@ -33,4 +33,18 @@ Notes
 
     ````
     $ yarn cdk:bootstrap && yarn cdk:deploy
-    ...
+    HelloStack: deploying...
+    
+    ✅  HelloStack (no changes)
+    
+    Outputs:
+    HelloStack.bucket = arn:aws:s3:::hellostack-bucket83908e77-1ihbe4gxlcd98
+    HelloStack.api = https://nmp5xxxxxx.execute-api.eu-west-1.amazonaws.com/
+  
+    $ curl https://nmp5xxxxxx.execute-api.eu-west-1.amazonaws.com/hello
+    {"Message": "Hello World from Bazel / CDK / Clojure!"
+    ````
+  
+- try changing the static response in [hello.json](infra/static/hello.json) or change the lambda handling code in [core.clj](java/lambda/core.clj) 
+
+- either way rerunning `yarn cdk:deploy` is the only step necessary to build and deploy any updates
