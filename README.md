@@ -47,4 +47,6 @@ Notes
   
 - try changing the static response in [hello.json](infra/static/hello.json) or change the lambda handling code in [core.clj](java/lambda/core.clj) 
 
-- either way rerunning `yarn cdk:deploy` is the only step necessary to build and deploy any updates
+- either way rerunning `yarn cdk:deploy` is the only step necessary to build and deploy any updates.
+
+- Remember to run `bazel run cdk -- destroy HelloStack` to tear down any AWS resources when finished.
