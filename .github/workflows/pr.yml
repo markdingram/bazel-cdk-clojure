@@ -40,8 +40,9 @@ jobs:
 
       - name: Configure
         run: |
-          - sudo cp ${GITHUB_WORKSPACE}/.github/workflows/.bazelrc-ci /etc/bazel.bazelrc
-          - bazel info
+          sudo cp ${GITHUB_WORKSPACE}/.github/workflows/.bazelrc-ci /etc/bazel.bazelrc
+          echo $PATH
+          "${GITHUB_WORKSPACE}/bin/bazel" info
 
       - name: Test
         run: |
