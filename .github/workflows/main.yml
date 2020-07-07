@@ -16,10 +16,9 @@ jobs:
         id: cache-bazelisk
         uses: actions/cache@v1
         with:
-          path: |
-            - /home/runner/.cache/bazelisk
-            - ${GITHUB_WORKSPACE}/bin/bazel
-          key: bazelisk-${{ hashFiles('.bazeliskversion') }}
+          - /home/runner/.cache/bazelisk
+          - ${GITHUB_WORKSPACE}/bin/bazel
+        key: bazelisk-${{ hashFiles('.bazeliskversion') }}
 
       - name: Install & Configure Bazelisk
         if: steps.cache-bazelisk.outputs.cache-hit != 'true'
