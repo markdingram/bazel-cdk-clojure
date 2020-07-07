@@ -29,3 +29,15 @@ nodejs_binary(
     entry_point = ":app.ts",
     visibility = ["//visibility:public"],
 )
+
+load("//rules/cdk:rules.bzl", "synth")
+
+synth(
+    name = "synth",
+    cdk_app = ":app",
+    data = [
+        # I'm not sure why this isn't transitively added from the infra ts_library above.
+        # Perhaps will be fixed by: https://github.com/bazelbuild/rules_nodejs/pull/1040
+        "//java/lambda:lambda_deploy.jar",
+    ]
+)

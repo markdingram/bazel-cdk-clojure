@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Mount bazelisk cache
+        id: cache-bazelisk
+        uses: actions/cache@v1
+        with:
+          path: |
+            - /home/runner/.cache/bazelisk
+            - ${GITHUB_WORKSPACE}/bin/bazel
+          key: bazelisk-${{ hashFiles('.bazeliskversion') }}
+
+      - name: Install & Configure Bazelisk
+        if: steps.cache-bazelisk.outputs.cache-hit != 'true'
+        run: |
+          BAZELISK_VERSION=`cat .bazeliskversion`
+          curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-linux-amd64"
+          mkdir -p "${GITHUB_WORKSPACE}/bin/"
+          mv bazelisk-linux-amd64 "${GITHUB_WORKSPACE}/bin/bazel"
+          chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
+
+      - name: Mount bazel caches
+        uses: actions/cache@v1
+        with:
+          path: |
+            - /home/runner/.cache/bazel/_bazel_runner/cache/repos/v1
+            - /home/runner/.cache/bazel-disk-cache
+          key: bazel-repo-cache- ${{ hashFiles('.bazelversion', 'WORKSPACE') }}
+
+      - name: Configure
+        run: sudo cp ${GITHUB_WORKSPACE}/.github/workflows/.bazelrc-ci /etc/bazel.bazelrc
+
+      - name: Test
+        run: |
+          "${GITHUB_WORKSPACE}/bin/bazel" test //...
+
+      - name: Build
+        run: |
+          "${GITHUB_WORKSPACE}/bin/bazel" build ///...
+          find dist/bin/infra/cdk.out -type d -exec chmod 0755 {} \;
+
+      - name: Upload Cloud Assembly
+        uses: actions/upload-artifact@v1
+        with:
+          name: cdk.out
+          path: dist/bin/infra/cdk.out
+
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Mount node_modules
+        uses: actions/cache@v1
+        id: cache-node
+        with:
+          path: node_modules
+          key: package - ${{ hashFiles('package.json') }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Download Cloud Assembly
+        uses: actions/download-artifact@v1
+        with:
+          name: cdk.out
+
+      - run: yarn install
+        if: steps.cache-node.outputs.cache-hit != 'true'
+
+      - run: node_modules/.bin/cdk deploy --verbose --app cdk.out --require-approval never "*"
