@@ -1,7 +1,9 @@
-name: CI
+name: Main
 
 on:
-  push: {}
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -54,7 +56,7 @@ jobs:
           name: cdk.out
           path: dist/bin/infra/cdk.out
 
-  diff:
+  deploy:
     runs-on: ubuntu-latest
 
     needs: build
@@ -81,40 +83,7 @@ jobs:
         with:
           name: cdk.out
 
-      - run: npm install
+      - run: yarn install
         if: steps.cache-node.outputs.cache-hit != 'true'
 
-      - run: node_modules/.bin/cdk diff --app cdk.out "*"
-
-
-#  deploy:
-#    runs-on: ubuntu-latest
-#
-#    needs: build
-#
-#    steps:
-#      - uses: actions/checkout@v1
-#
-#      - name: Mount node_modules
-#        uses: actions/cache@v1
-#        id: cache-node
-#        with:
-#          path: node_modules
-#          key: package - ${{ hashFiles('package.json') }}
-#
-#      - name: Configure AWS Credentials
-#        uses: aws-actions/configure-aws-credentials@v1
-#        with:
-#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: eu-west-1
-#
-#      - name: Download Cloud Assembly
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: cdk.out
-#
-#      - run: yarn install
-#        if: steps.cache-node.outputs.cache-hit != 'true'
-#
-#      - run: node_modules/.bin/cdk deploy --app cdk.out --require-approval never "*"
+      - run: node_modules/.bin/cdk deploy --app cdk.out --require-approval never "*"
