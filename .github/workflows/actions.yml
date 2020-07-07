@@ -85,4 +85,4 @@ jobs:
       - run: yarn install
         if: steps.cache-node.outputs.cache-hit != 'true'
 
-      - run: node_modules/.bin/cdk deploy --verbose --app cdk.out --require-approval never "*"
+      - run: node_modules/.bin/cdk deploy --app cdk.out --require-approval never "*"

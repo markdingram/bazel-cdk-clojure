@@ -1,6 +1,8 @@
 Bazel CDK Clojure
 =================
 
+![CI](https://github.com/markdingram/bazel-cdk-clojure/workflows/CI/badge.svg)
+
 If you ever (?!) wanted to create an AWS Clojure Lambda with the CDK then this is the place to come! 
 
 Requires Bazelisk / Yarn / OpenJDK 11, possibly other things. Tested on Mac OSX & Linux.
