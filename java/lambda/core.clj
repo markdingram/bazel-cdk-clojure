@@ -22,7 +22,7 @@
 (defn help
   "Just a dummy function to use from a test"
   []
-  (get (aws/ops s3) :GetObject))
+  (get (aws/ops s3) :ListBuckets))
 
 (comment
   (aws/ops s3)

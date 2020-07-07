@@ -43,9 +43,9 @@ jobs:
         run: |
           "${GITHUB_WORKSPACE}/bin/bazel" test //...
 
-      - name: Build
+      - name: Synth
         run: |
-          "${GITHUB_WORKSPACE}/bin/bazel" build ///...
+          "${GITHUB_WORKSPACE}/bin/bazel" build infra:synth
           find dist/bin/infra/cdk.out -type d -exec chmod 0755 {} \;
 
       - name: Upload Cloud Assembly
