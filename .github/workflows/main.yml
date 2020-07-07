@@ -13,40 +13,43 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Mount bazelisk cache
-        id: cache-bazelisk
-        uses: actions/cache@v1
+        id: bazelisk-cache
+        uses: actions/cache@v2
         with:
-          - /home/runner/.cache/bazelisk
-          - ${GITHUB_WORKSPACE}/bin/bazel
-        key: bazelisk-${{ hashFiles('.bazeliskversion') }}
+          path: |
+            - /home/runner/.cache/bazelisk
+            - /usr/local/bin/bazel
+          key: bazelisk-cache-${{ hashFiles('.bazeliskversion') }}
 
       - name: Install & Configure Bazelisk
-        if: steps.cache-bazelisk.outputs.cache-hit != 'true'
+        if: steps.bazelisk-cache.outputs.cache-hit != 'true'
         run: |
           BAZELISK_VERSION=`cat .bazeliskversion`
           curl -LO "https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-linux-amd64"
-          mkdir -p "${GITHUB_WORKSPACE}/bin/"
-          mv bazelisk-linux-amd64 "${GITHUB_WORKSPACE}/bin/bazel"
-          chmod +x "${GITHUB_WORKSPACE}/bin/bazel"
+          sudo mv bazelisk-linux-amd64 /usr/local/bin/bazel
+          sudo chmod +x /usr/local/bin/bazel
 
       - name: Mount bazel caches
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: |
             - /home/runner/.cache/bazel/_bazel_runner/cache/repos/v1
             - /home/runner/.cache/bazel-disk-cache
-          key: bazel-repo-cache- ${{ hashFiles('.bazelversion', 'WORKSPACE') }}
+          key: bazel-cache- ${{ hashFiles('.bazelversion', 'WORKSPACE') }}
 
       - name: Configure
-        run: sudo cp ${GITHUB_WORKSPACE}/.github/workflows/.bazelrc-ci /etc/bazel.bazelrc
+        run: |
+          mkdir -p /home/runner/.cache/bazel-disk-cache
+          sudo cp ${GITHUB_WORKSPACE}/.github/workflows/.bazelrc-ci /etc/bazel.bazelrc
+          bazel info
 
       - name: Test
         run: |
-          "${GITHUB_WORKSPACE}/bin/bazel" test //...
+          bazel test //...
 
       - name: Synth
         run: |
-          "${GITHUB_WORKSPACE}/bin/bazel" build infra:synth
+          bazel build infra:synth
           find dist/bin/infra/cdk.out -type d -exec chmod 0755 {} \;
 
       - name: Upload Cloud Assembly
@@ -82,7 +85,7 @@ jobs:
         with:
           name: cdk.out
 
-      - run: yarn install
+      - run: npm install
         if: steps.cache-node.outputs.cache-hit != 'true'
 
       - run: node_modules/.bin/cdk deploy --app cdk.out --require-approval never "*"
