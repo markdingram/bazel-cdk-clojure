@@ -88,4 +88,18 @@ jobs:
       - run: npm install
         if: steps.cache-node.outputs.cache-hit != 'true'
 
-      - run: node_modules/.bin/cdk diff -c aws-cdk:enableDiffNoFail=true --app cdk.out "*"
+      - name: Run CDK diff
+        run: node_modules/.bin/cdk diff -c aws-cdk:enableDiffNoFail=true --no-color --app cdk.out "*" 2>&1 | tee cdk.log
+
+      - name: Add comment to PR
+        env:
+          URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          jq --raw-input --slurp '{body: .}' cdk.log > cdk.json
+          curl \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -d @cdk.json \
+            -X POST \
+            $URL
