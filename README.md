@@ -1,7 +1,7 @@
 Bazel CDK Clojure
 =================
 
-![CI](https://github.com/markdingram/bazel-cdk-clojure/workflows/CI/badge.svg)
+![CI](https://github.com/markdingram/bazel-cdk-clojure/workflows/main/badge.svg)
 
 If you ever (?!) wanted to create an AWS Clojure Lambda with the CDK then this is the place to come! 
 
@@ -52,3 +52,11 @@ Notes
 - either way rerunning `yarn cdk:deploy` is the only step necessary to build and deploy any updates.
 
 - Remember to run `bazel run cdk -- destroy HelloStack` to tear down any AWS resources when finished.
+
+Further reading
+===============
+
+- <https://www.markdingram.com/blog/2020/06/30/bazel-clojure.html>
+
+- <https://www.markdingram.com/blog/2020/07/08/github-actions-for-cdk.html>
+
