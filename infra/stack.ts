@@ -18,7 +18,7 @@ export class HelloStack extends cdk.Stack {
 
         const s3Lambda = new lambda.Function(this, 'S3Lambda', {
             runtime: lambda.Runtime.JAVA_11,
-            memorySize: 2944, // 3008 is the max, lower values take an age to start! :)
+            memorySize: 1504, // 3008 is the max, lower values take longer start! :)
             handler: 'lambda.Handler',
             code: lambda.Code.fromAsset(`${process.env.GENDIR}/java/lambda/lambda_deploy.jar`),
             timeout: cdk.Duration.seconds(30),
